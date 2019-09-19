@@ -1,0 +1,20 @@
+{
+	"game": {
+		"abandonned": "",
+		"command": "",
+		"provocated": {
+			"member":"",
+			"owner": ""
+		},
+		"start": ""
+	},
+	"round": {
+		"abandonned": "",
+		"command": "",
+		"end": {
+			"win": "",
+			"lost": ""
+		},
+		"start": ""
+	}
+}
