@@ -1,0 +1,14 @@
+{
+  "name": "horsengel-roulette",
+  "version": "1.0.0",
+  "description": "Russian roulette for a Discord.js bot where the loser get kicked.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Helmasaur",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
