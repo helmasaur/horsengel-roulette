@@ -6,8 +6,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Helmasaur/Horsengel-roulette.git"
+  },
+  "keywords": [
+    "bot",
+    "discord",
+    "discord.js",
+    "command",
+    "game",
+    "russian roulette"
+  ],
   "author": "Helmasaur",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Helmasaur/Horsengel-roulette/issues"
+  },
+  "homepage": "https://github.com/Helmasaur/Horsengel-roulette#readme",
   "dependencies": {
     "discord.js": "^11.5.1"
   }
