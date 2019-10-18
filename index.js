@@ -73,10 +73,10 @@ class HorsengelRoulette {
 		const addBullets = (revolver) => {
 			let chamber;
 			
-			if (this.players[1] === this.bot.id) { // Bioman doesn't lose
-				chamber = Math.floor(Math.random() * (magazine));
-			} else {
+			if (this.players[1].id === this.bot.id) { // B doesn't lose
 				chamber = Math.floor(Math.random() * (magazine / 2)) * 2;
+			} else {
+				chamber = Math.floor(Math.random() * (magazine));
 			}
 
 			if (revolver[chamber] === 0) {
@@ -100,49 +100,52 @@ class HorsengelRoulette {
 		for (let chamber = 0; chamber < this.revolver.length; chamber++) {
 			// Waiting the answer
 			this.channel.send(`*${player}, it's your turn to shoot. You should use the command ?pan to shoot. (You have 30 seconds.)*`);
-			try {
-				const round = await this.channel.awaitMessages((msg) => {
-					if (msg.author.id === this.players[1].id && msg.content === '?pan') {
-						return true;
-					}
+
+			let answer = true;
+			if (player.id === this.bot.id) {
+				await this.sleep();
+				this.channel.send(`?pan`);
+			} else {
+				answer = await this.channel.awaitMessages((msg) => {
+					if (msg.author.id === player.id && msg.content === '?pan') {
+							return true;
+						}
+						return false;
+					}, {maxMatches: 1, time: 30000, errors: ['time']})
+				.catch(() => {
 					return false;
-				}, {maxMatches: 1, time: 30 * 1000, errors: ['time']});
-	
-				// Round
-				let description;
+				});
+			}
 
-				if (this.revolver[chamber] === 0) {
-					description = `XXX shot but he is still alive.`;
-					this.channel.send({embed: this.embed(chamber, description)});
-				} else {
-					if (player.user.id === this.guild.ownerID) {
-						description = `*I don't have the right to kick XXXX but I can say that he lost.*`;
-					} else if (player.user.id === this.bot.id) {
-						return this.channel.send('There must be a mistake…');
-					} else {
-						description = 'lost the horsengel roulette'
-					}
-
-					this.channel.send({embed: this.embed(chamber, description,true)});
-					this.channel.send(`*!kick ${player} ${lostMessage}*`);
-					return kick(player, lostMessage);
-				}
-
-				// Player swticher
-				if (player.id  === this.players[0].id) {
-					player = this.players[1];
-				} else {
-					player = this.players[0];
-				}
-			} catch (e) {
-				console.log(e);
+			if (!answer) {
 				return this.channel.send(`*Your opponent, XXX preferred to run away.*`);
+			}
+
+			if (this.revolver[chamber] === 0) {
+				await this.channel.send({embed: this.embed(chamber, `XXX shot but he is still alive.`)});
+			} else {
+				if (player.user.id === this.guild.ownerID) {
+					return this.channel.send({embed: this.embed(chamber, `I don't have the right to kick XXXX but I can say that he lost.`, true)});
+				} else if (player.user.id === this.bot.id) {
+					return this.channel.send('There must be a mistake…');
+				} else {
+					this.channel.send({embed: this.embed(chamber, 'XXX lost.', true)});
+					const description = 'lost the Horsengel roulette';
+					await this.channel.send(`*!kick ${player} ${description}`);
+					return player.kick(player, description);
+				}
+			}
+	
+			// Player swticher
+			if (player.id  === this.players[0].id) {
+				player = this.players[1];
+			} else {
+				player = this.players[0];
 			}
 		}
 	}
 
 	async start() {
-
 		// Case when both players are the same member
 		if (this.players[1].id === this.players[0].id) {
 			if (this.players[0].id === this.guild.ownerID) {
@@ -154,19 +157,41 @@ class HorsengelRoulette {
 
 		this.channel.send(`*${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by !yes to accept it. (You have 30 seconds.)*`);
 
-		// Waiting the answer
-		try {
-			const start = await this.channel.awaitMessages((msg) => {
+		let answer = true;
+		if (this.players[1].id === this.bot.id) {
+			await this.sleep();
+			const mood = Math.floor(Math.random() * 10);
+			if (mood === 5) {
+				if (this.players[1].user.id === this.guild.ownerID) {
+					return this.channel.send(`I don't want to play to a Horsengel roulette. I'm sorry.`);
+				} else {
+					const description = 'don\'t bother me with a Horsengel roulette';
+					await this.channel.send(`*!kick ${players[0]} ${description}`);
+					return players[1].kick(player, description);
+				}
+			}
+			this.channel.send(`?yes`);
+		} else {
+			answer = this.channel.awaitMessages((msg) => {
 				if (msg.author.id === this.players[1].id && msg.content === '?yes') {
 					return true;
 				}
 				return false;
-			}, {maxMatches: 1, time: 30 * 1000, errors: ['time']});
-			this.game();
-		} catch(e) {
-			console.log(e);
+			}, {maxMatches: 1, time: 30000, errors: ['time']})
+			.catch(() => {
+				return false;
+			});
+		}
+
+		if (!answer) {
 			return this.channel.send(`*Your opponent, ${this.players[1]} preferred to run away.*`);
 		}
+
+		return this.game();
+	}
+
+	async sleep() {
+		return new Promise(res => setTimeout(res, 1200));
 	}
 }
 
