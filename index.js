@@ -129,7 +129,7 @@ class HorsengelRoulette {
 				} else if (player.user.id === this.bot.id) {
 					return this.channel.send('There must be a mistake…');
 				} else {
-					this.channel.send({embed: this.embed(chamber, 'XXX lost.', true)});
+					this.channel.send({embed: this.embed(chamber, `${player} lost.`, true)});
 					const description = 'lost the Horsengel roulette';
 					await this.channel.send(`${this.prefix}kick ${player} ${description}`);
 					return player.kick(player, description);
