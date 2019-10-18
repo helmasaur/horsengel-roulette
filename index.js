@@ -99,7 +99,7 @@ class HorsengelRoulette {
 
 		for (let chamber = 0; chamber < this.revolver.length; chamber++) {
 			// Waiting the answer
-			this.channel.send(`*${player}, it's your turn to shoot. You should use the command ?pan to shoot. (You have 30 seconds.)*`);
+			this.channel.send(`${player}, it's your turn to shoot. You should use the command ?pan to shoot. (You have 30 seconds.)`);
 
 			let answer = true;
 			if (player.id === this.bot.id) {
@@ -107,7 +107,7 @@ class HorsengelRoulette {
 				this.channel.send(`?pan`);
 			} else {
 				answer = await this.channel.awaitMessages((msg) => {
-					if (msg.author.id === player.id && msg.content === '?pan') {
+					if (msg.author.id === player.id && msg.content === `${this.prefix}pan`) {
 							return true;
 						}
 						return false;
@@ -118,20 +118,20 @@ class HorsengelRoulette {
 			}
 
 			if (!answer) {
-				return this.channel.send(`*Your opponent, XXX preferred to run away.*`);
+				return this.channel.send(`${players[1]} preferred to run away.`);
 			}
 
 			if (this.revolver[chamber] === 0) {
-				await this.channel.send({embed: this.embed(chamber, `XXX shot but he is still alive.`)});
+				await this.channel.send({embed: this.embed(chamber, `${player} shot but he is still alive.`)});
 			} else {
 				if (player.user.id === this.guild.ownerID) {
-					return this.channel.send({embed: this.embed(chamber, `I don't have the right to kick XXXX but I can say that he lost.`, true)});
+					return this.channel.send({embed: this.embed(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)});
 				} else if (player.user.id === this.bot.id) {
 					return this.channel.send('There must be a mistake…');
 				} else {
 					this.channel.send({embed: this.embed(chamber, 'XXX lost.', true)});
 					const description = 'lost the Horsengel roulette';
-					await this.channel.send(`*!kick ${player} ${description}`);
+					await this.channel.send(`${this.prefix}kick ${player} ${description}`);
 					return player.kick(player, description);
 				}
 			}
@@ -149,13 +149,13 @@ class HorsengelRoulette {
 		// Case when both players are the same member
 		if (this.players[1].id === this.players[0].id) {
 			if (this.players[0].id === this.guild.ownerID) {
-				return this.channel.send('*I can\'t suggest you to kick yourself. I would feel remorse after.*');
+				return this.channel.send('I can\'t suggest you to kick yourself. I would feel remorse after.');
 			} else {
-				return this.channel.send('*It would be easier to kick yourself. Or would you need some help?*');
+				return this.channel.send('It would be easier to kick yourself. Or would you need some help?');
 			}
 		}
 
-		this.channel.send(`*${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by !yes to accept it. (You have 30 seconds.)*`);
+		this.channel.send(`${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by !yes to accept it. (You have 30 seconds.)`);
 
 		let answer = true;
 		if (this.players[1].id === this.bot.id) {
@@ -163,17 +163,17 @@ class HorsengelRoulette {
 			const mood = Math.floor(Math.random() * 10);
 			if (mood === 5) {
 				if (this.players[1].user.id === this.guild.ownerID) {
-					return this.channel.send(`I don't want to play to a Horsengel roulette. I'm sorry.`);
+					return this.channel.send('I don\'t want to play to a Horsengel roulette. I\'m sorry.');
 				} else {
 					const description = 'don\'t bother me with a Horsengel roulette';
-					await this.channel.send(`*!kick ${players[0]} ${description}`);
+					await this.channel.send(`${this.prefix}kick ${players[0]} ${description}`);
 					return players[1].kick(player, description);
 				}
 			}
-			this.channel.send(`?yes`);
+			this.channel.send(`${this.prefix}yes`);
 		} else {
 			answer = this.channel.awaitMessages((msg) => {
-				if (msg.author.id === this.players[1].id && msg.content === '?yes') {
+				if (msg.author.id === this.players[1].id && msg.content === `${this.prefix}yes`) {
 					return true;
 				}
 				return false;
@@ -184,7 +184,7 @@ class HorsengelRoulette {
 		}
 
 		if (!answer) {
-			return this.channel.send(`*Your opponent, ${this.players[1]} preferred to run away.*`);
+			return this.channel.send(`Your opponent, ${this.players[1]} preferred to run away.`);
 		}
 
 		return this.game();
