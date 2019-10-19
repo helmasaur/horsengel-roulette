@@ -100,13 +100,13 @@ class HorsengelRoulette {
 
 		for (let chamber = 0; chamber < this.revolver.length; chamber++) {
 			// Waiting for the answer
-			this.channel.send(`${player}, it's your turn to shoot. You should use the command ?pan to shoot. (You have 30 seconds.)`);
+			this.channel.send(`${player}, it's your turn to shoot. You should use the command ${this.prefix}pan to shoot. (You have 30 seconds.)`);
 
 			let answer = true;
 			// Game against the bot
 			if (player.id === this.bot.id) {
 				await this.sleep();
-				this.channel.send(`?pan`);
+				this.channel.send(`${this.prefix}pan`);
 			// Game against a member
 			} else {
 				answer = await this.channel.awaitMessages((msg) => {
@@ -164,7 +164,7 @@ class HorsengelRoulette {
 			}
 		}
 
-		this.channel.send(`${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by !yes to accept it. (You have 30 seconds.)`);
+		this.channel.send(`${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by ${this.prefix}yes to accept it. (You have 30 seconds.)`);
 
 		let answer = true;
 
@@ -205,7 +205,7 @@ class HorsengelRoulette {
 
 		// The provoked member refuses to play
 		if (!answer) {
-			return this.channel.send(`Your opponent, ${this.players[1]} preferred to run away.`);
+			return this.channel.send(`${this.players[1]} preferred to run away.`);
 		}
 
 		return this.game();
