@@ -26,9 +26,9 @@ const client = new Discord.Client();
 const HorsengelRoulette = require('horsengel-roulette');
 
 if (msg.content.startsWith('?hr')) {
-	const hr = new HorsengelRoulette(msg, msg.member, msg.content.split(' ')[1], '!', 'fr');
+	const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'fr');
 	hr.load(6, 1); // Chamber size and number of bullets
-	hr.start(msg);
+	hr.start();
 }
 
 client.login('');
