@@ -98,13 +98,15 @@ class HorsengelRoulette {
 		let player = this.players[0];
 
 		for (let chamber = 0; chamber < this.revolver.length; chamber++) {
-			// Waiting the answer
+			// Waiting for the answer
 			this.channel.send(`${player}, it's your turn to shoot. You should use the command ?pan to shoot. (You have 30 seconds.)`);
 
 			let answer = true;
+			// Game against the bot
 			if (player.id === this.bot.id) {
 				await this.sleep();
 				this.channel.send(`?pan`);
+			// Game against a member
 			} else {
 				answer = await this.channel.awaitMessages((msg) => {
 					if (msg.author.id === player.id && msg.content === `${this.prefix}pan`) {
@@ -117,17 +119,23 @@ class HorsengelRoulette {
 				});
 			}
 
+			// Game abandoned by a player 
 			if (!answer) {
 				return this.channel.send(`${players[1]} preferred to run away.`);
 			}
 
+			// No bullet
 			if (this.revolver[chamber] === 0) {
 				await this.channel.send({embed: this.embed(chamber, `${player} shot but he is still alive.`)});
+			// Game over
 			} else {
+				// The loser is the guild owner
 				if (player.user.id === this.guild.ownerID) {
 					return this.channel.send({embed: this.embed(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)});
+				// Loser is the bot
 				} else if (player.user.id === this.bot.id) {
 					return this.channel.send('There must be a mistake…');
+				// T loser is a member
 				} else {
 					this.channel.send({embed: this.embed(chamber, `${player} lost.`, true)});
 					const description = 'lost the Horsengel roulette';
@@ -146,7 +154,7 @@ class HorsengelRoulette {
 	}
 
 	async start() {
-		// Case when both players are the same member
+		// Stops the game if both players are the same member
 		if (this.players[1].id === this.players[0].id) {
 			if (this.players[0].id === this.guild.ownerID) {
 				return this.channel.send('I can\'t suggest you to kick yourself. I would feel remorse after.');
@@ -158,8 +166,10 @@ class HorsengelRoulette {
 		this.channel.send(`${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by !yes to accept it. (You have 30 seconds.)`);
 
 		let answer = true;
+		// Bot is provoked
 		if (this.players[1].id === this.bot.id) {
 			await this.sleep();
+			// Bot refuses to play
 			const mood = Math.floor(Math.random() * 10);
 			if (mood === 5) {
 				if (this.players[1].user.id === this.guild.ownerID) {
@@ -170,7 +180,9 @@ class HorsengelRoulette {
 					return players[1].kick(player, description);
 				}
 			}
+			// Bot accepts to play
 			this.channel.send(`${this.prefix}yes`);
+		// A member is provoked
 		} else {
 			answer = this.channel.awaitMessages((msg) => {
 				if (msg.author.id === this.players[1].id && msg.content === `${this.prefix}yes`) {
@@ -183,6 +195,7 @@ class HorsengelRoulette {
 			});
 		}
 
+		// The provoked member refuses to play
 		if (!answer) {
 			return this.channel.send(`Your opponent, ${this.players[1]} preferred to run away.`);
 		}
