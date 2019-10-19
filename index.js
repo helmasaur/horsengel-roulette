@@ -119,9 +119,9 @@ class HorsengelRoulette {
 				});
 			}
 
-			// Game abandoned by a player 
+			// Game abandoned by a player
 			if (!answer) {
-				return this.channel.send(`${players[1]} preferred to run away.`);
+				return this.channel.send(`${player} preferred to run away.`);
 			}
 
 			// No bullet
