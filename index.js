@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 
+// Bioman is the name of the bot which originally directly included the Horsengel roulette. It means "the bot that implements this module".
 class HorsengelRoulette {
 	constructor(msg, player1, player2, prefix, language) {
 		this.bot = msg.guild.me;
@@ -132,7 +133,7 @@ class HorsengelRoulette {
 				// The loser is the guild owner
 				if (player.user.id === this.guild.ownerID) {
 					return this.channel.send({embed: this.embed(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)});
-				// Loser is the bot
+				// Loser is Bioman
 				} else if (player.user.id === this.bot.id) {
 					return this.channel.send('There must be a mistake…');
 				// T loser is a member
@@ -166,22 +167,29 @@ class HorsengelRoulette {
 		this.channel.send(`${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by !yes to accept it. (You have 30 seconds.)`);
 
 		let answer = true;
-		// Bot is provoked
-		if (this.players[1].id === this.bot.id) {
-			await this.sleep();
-			// Bot refuses to play
-			const mood = Math.floor(Math.random() * 10);
-			if (mood === 5) {
-				if (this.players[1].user.id === this.guild.ownerID) {
-					return this.channel.send('I don\'t want to play to a Horsengel roulette. I\'m sorry.');
-				} else {
-					const description = 'don\'t bother me with a Horsengel roulette';
-					await this.channel.send(`${this.prefix}kick ${players[0]} ${description}`);
-					return players[1].kick(player, description);
+
+		// A bot is provoked
+		if (this.players[1].user.bot) {
+			// Bioman is provoked
+			if (this.players[1].id === this.bot.id) {
+				await this.sleep();
+				// Bot refuses to play
+				const mood = Math.floor(Math.random() * 10);
+				if (mood === 5) {
+					if (this.players[1].user.id === this.guild.ownerID) {
+						return this.channel.send('I don\'t want to play to a Horsengel roulette. I\'m sorry.');
+					} else {
+						const description = 'don\'t bother me with a Horsengel roulette';
+						await this.channel.send(`${this.prefix}kick ${players[0]} ${description}`);
+						return players[1].kick(player, description);
+					}
 				}
+				// Bioman accepts to play
+				this.channel.send(`${this.prefix}yes`);
+			// An other bot is provoked
+			} else {
+				return this.channel.send(`It's impossible to play against ${this.players[1]}.`)
 			}
-			// Bot accepts to play
-			this.channel.send(`${this.prefix}yes`);
 		// A member is provoked
 		} else {
 			answer = this.channel.awaitMessages((msg) => {
