@@ -25,10 +25,12 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const HorsengelRoulette = require('horsengel-roulette');
 
-if (msg.content.startsWith('?hr')) {
-	const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'fr');
-	hr.load(6, 1); // Chamber size and number of bullets
-	hr.start();
+client.on('message', msg => {
+	if (msg.content.startsWith('!hr')) {
+		const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'fr');
+		hr.load(6, 1); // Chamber size and number of bullets
+		hr.start();
+	}
 }
 
 client.login('');
