@@ -25,7 +25,7 @@ class HorsengelRoulette {
 		}
 	}
 
-	embed(round, description, gameOver = false) {
+	embedRound(round, description, gameOver = false) {
 		round++;
 		let index = round * 3 - 2; // Brackets management
 
@@ -127,20 +127,23 @@ class HorsengelRoulette {
 
 			// No bullet
 			if (this.revolver[chamber] === 0) {
-				await this.channel.send({embed: this.embed(chamber, `${player} shot but he is still alive.`)});
+				await this.channel.send({embed: this.embedRound(chamber, `${player} shot but he is still alive.`)});
 			// Game over
 			} else {
 				// The loser is the guild owner
 				if (player.user.id === this.guild.ownerID) {
-					return this.channel.send({embed: this.embed(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)});
+					return this.channel.send({embed: this.embedRound(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)});
 				// Loser is Bioman
 				} else if (player.user.id === this.bot.id) {
 					return this.channel.send('There must be a mistake…');
-				// T loser is a member
+				// The loser is a member
 				} else {
-					this.channel.send({embed: this.embed(chamber, `${player} lost.`, true)});
+					await this.channel.send({embed: this.embedRound(chamber, `${player} lost.`, true)});
 					const description = 'lost the Horsengel roulette';
 					await this.channel.send(`${this.prefix}kick ${player} ${description}`);
+					await this.channel.send({embed: this.embedKick(player, description, true)});
+					const invite = await msg.guild.defaultChannel.createInvite({maxAge: 0, maxUses: 1});
+					await player.user.send(invite.url);
 					return player.kick(player, description);
 				}
 			}
@@ -214,6 +217,19 @@ class HorsengelRoulette {
 	async sleep() {
 		return new Promise(res => setTimeout(res, 1200));
 	}
+
+	embedKick(kicked, reason) {
+		return new Discord.RichEmbed()
+						.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
+						.setColor('ORANGE')
+						//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')
+						.setThumbnail(member.displayAvatarURL)
+						.addField('Action', 'Kick', true)
+						.addField('Reason', reason, true)
+						.addField('Member', kicked, true)
+						.addField('Member ID', kicked.id, true);
+	}
+	
 }
 
 module.exports = HorsengelRoulette;
