@@ -220,14 +220,14 @@ class HorsengelRoulette {
 
 	embedKick(kicked, reason) {
 		return new Discord.RichEmbed()
-						.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
-						.setColor('ORANGE')
-						//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')
-						.setThumbnail(member.user.displayAvatarURL)
-						.addField('Action', 'Kick', true)
-						.addField('Reason', reason, true)
-						.addField('Member', kicked, true)
-						.addField('Member ID', kicked.id, true);
+			.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
+			.setColor('ORANGE')
+			//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')
+			.setThumbnail(member.user.displayAvatarURL)
+			.addField('Action', 'Kick', true)
+			.addField('Reason', reason, true)
+			.addField('Member', kicked, true)
+			.addField('Member ID', kicked.id, true);
 	}
 	
 }
