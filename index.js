@@ -83,7 +83,7 @@ class HorsengelRoulette {
 					} else {
 						const description = 'don\'t bother me with a Horsengel roulette';
 						await this.channel.send(`${this.prefix}kick ${players[0]} ${description}`);
-						return players[1].kick(player, description);
+						return this.kick(players[0], description);
 					}
 				}
 				// Bioman accepts to play
@@ -158,11 +158,7 @@ class HorsengelRoulette {
 				} else {
 					await this.channel.send({embed: this.embedRound(chamber, `${player} lost.`, true)});
 					const description = 'lost the Horsengel roulette';
-					await this.channel.send(`${this.prefix}kick ${player} ${description}`);
-					await this.channel.send({embed: this.embedKick(player, description, true)});
-					const invite = await msg.guild.defaultChannel.createInvite({maxAge: 0, maxUses: 1});
-					await player.user.send(invite.url);
-					return player.kick(player, description);
+					return this.kick(player, description);
 				}
 			}
 	
@@ -173,6 +169,14 @@ class HorsengelRoulette {
 				player = this.players[0];
 			}
 		}
+	}
+
+	async kick(player, description) {
+		await this.channel.send(`${this.prefix}kick ${player} ${description}`);
+		await this.channel.send({embed: this.embedKick(player, description, true)});
+		const invite = await msg.guild.defaultChannel.createInvite({maxAge: 0, maxUses: 1});
+		await player.user.send(invite.url);
+		return player.kick(player, description);
 	}
 
 	async sleep() {
