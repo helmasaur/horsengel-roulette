@@ -1,6 +1,6 @@
 {
   "name": "horsengel-roulette",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Russian roulette for a Discord.js bot where the loser get kicked.",
   "main": "index.js",
   "scripts": {
