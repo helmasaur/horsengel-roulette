@@ -94,7 +94,7 @@ class HorsengelRoulette {
 			}
 		// A member is provoked
 		} else {
-			answer = this.channel.awaitMessages((msg) => {
+			answer = await this.channel.awaitMessages((msg) => {
 				if (msg.author.id === this.players[1].id && msg.content === `${this.prefix}yes`) {
 					return true;
 				}
@@ -172,11 +172,15 @@ class HorsengelRoulette {
 	}
 
 	async kick(player, description) {
-		await this.channel.send(`${this.prefix}kick ${player} ${description}`);
-		await this.channel.send({embed: this.embedKick(player, description, true)});
-		const invite = await msg.guild.defaultChannel.createInvite({maxAge: 0, maxUses: 1});
-		await player.user.send(invite.url);
-		return player.kick(player, description);
+		if (this.bot.hasPermission('KICK_MEMBERS')) {
+			await this.channel.send(`${this.prefix}kick ${player} ${description}`);
+			await this.channel.send({embed: this.embedKick(player.user, description)});
+			const invite = await this.guild.defaultChannel.createInvite({maxAge: 0, maxUses: 1});
+			await player.user.send(invite.url);
+			return player.kick(player, description);
+		}
+
+		return this.channel.send('I don\'t have the persmission to kick.');
 	}
 
 	async sleep() {
@@ -227,7 +231,7 @@ class HorsengelRoulette {
 			.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
 			.setColor('ORANGE')
 			//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')
-			.setThumbnail(member.user.displayAvatarURL)
+			.setThumbnail(kicked.displayAvatarURL)
 			.addField('Action', 'Kick', true)
 			.addField('Reason', reason, true)
 			.addField('Member', kicked, true)
