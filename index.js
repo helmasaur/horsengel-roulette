@@ -80,11 +80,10 @@ class HorsengelRoulette {
 				// Bot refuses to play
 				const mood = Math.floor(Math.random() * 10);
 				if (mood === 5) {
-					if (this.players[1].user.id === this.guild.ownerID) {
+					if (this.players[0].user.id === this.guild.ownerID) {
 						return this.channel.send('I don\'t want to play to a Horsengel roulette. I\'m sorry.');
 					} else {
 						const description = 'don\'t bother me with a Horsengel roulette';
-						await this.channel.send(`${this.prefix}kick ${this.players[0]} ${description}`);
 						return this.kick(this.players[0], description);
 					}
 				}
