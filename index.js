@@ -10,6 +10,8 @@ class HorsengelRoulette {
 		this.prefix = prefix;
 		this.revolver = [];
 		this.revolverString = '[o][o][o][o][o][o]';
+		this.maxTimePlayerAnswer = 30000;
+		this.timeBotAnswer = 1500;
 
 		// Language
 		const regex = new RegExp('^[a-z]{2}(-[A-Z]{2})?$');
@@ -99,7 +101,7 @@ class HorsengelRoulette {
 					return true;
 				}
 				return false;
-			}, {max: 1, time: 30000, errors: ['time']})
+			}, {max: 1, time: this.maxTimePlayerAnswer, errors: ['time']})
 			.catch(() => {
 				return false;
 			});
@@ -132,7 +134,7 @@ class HorsengelRoulette {
 							return true;
 						}
 						return false;
-					}, {max: 1, time: 30000, errors: ['time']})
+					}, {max: 1, time: this.maxTimePlayerAnswer, errors: ['time']})
 				.catch(() => {
 					return false;
 				});
@@ -184,7 +186,7 @@ class HorsengelRoulette {
 	}
 
 	async sleep() {
-		return new Promise(res => setTimeout(res, 1200));
+		return new Promise(res => setTimeout(res, this.timeBotAnswer));
 	}
 
 	embedRound(round, description, gameOver = false) {
@@ -227,7 +229,7 @@ class HorsengelRoulette {
 	}
 
 	embedKick(kicked, reason) {
-		return new Discord.RichEmbed()
+		return new Discord.MessageEmbed()
 			.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
 			.setColor('ORANGE')
 			//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')

@@ -18,6 +18,8 @@ export default class HorsengelRoulette<P1 extends GuildMember, P2 extends GuildM
     public revolver: number[];
     public revolverString: string;
     public strings: LocaleStrings;
+    public maxTimePlayerAnswer: number;
+    public timeBotAnswer: number;
 
     public constructor(
         msg: Message, 
