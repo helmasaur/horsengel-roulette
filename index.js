@@ -82,8 +82,8 @@ class HorsengelRoulette {
 						return this.channel.send('I don\'t want to play to a Horsengel roulette. I\'m sorry.');
 					} else {
 						const description = 'don\'t bother me with a Horsengel roulette';
-						await this.channel.send(`${this.prefix}kick ${players[0]} ${description}`);
-						return this.kick(players[0], description);
+						await this.channel.send(`${this.prefix}kick ${this.players[0]} ${description}`);
+						return this.kick(this.players[0], description);
 					}
 				}
 				// Bioman accepts to play
@@ -99,7 +99,7 @@ class HorsengelRoulette {
 					return true;
 				}
 				return false;
-			}, {maxMatches: 1, time: 30000, errors: ['time']})
+			}, {max: 1, time: 30000, errors: ['time']})
 			.catch(() => {
 				return false;
 			});
@@ -132,7 +132,7 @@ class HorsengelRoulette {
 							return true;
 						}
 						return false;
-					}, {maxMatches: 1, time: 30000, errors: ['time']})
+					}, {max: 1, time: 30000, errors: ['time']})
 				.catch(() => {
 					return false;
 				});
@@ -213,17 +213,17 @@ class HorsengelRoulette {
 			}
 		}
 
-		return new Discord.RichEmbed()
+		return new Discord.MessageEmbed()
 			.setTitle('Horsengel roulette')
 			.setColor('BLUE')
 			.setDescription(description)
 			//.setThumbnail()
 			.addField('Player 1', this.players[0], true)
 			.addField('Player 2', this.players[1], true)
-			.addBlankField(true)
+			.addField('\u200b', '​\u200b') // blank field
 			.addField('Round', round, true)
 			.addField('Revolver', this.revolverString, true)
-			.addBlankField(true);
+			.addField('\u200b', '​\u200b') // blank field
 	}
 
 	embedKick(kicked, reason) {
