@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Helmasaur/Horsengel-roulette.git"
+    "url": "git+https://github.com/helmasaur/horsengel-roulette.git"
   },
   "keywords": [
     "bot",
@@ -22,9 +22,9 @@
   "author": "Helmasaur",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Helmasaur/Horsengel-roulette/issues"
+    "url": "https://github.com/helmasaur/horsengel-roulette/issues"
   },
-  "homepage": "https://github.com/Helmasaur/Horsengel-roulette#readme",
+  "homepage": "https://github.com/helmasaur/horsengel-roulette#readme",
   "dependencies": {
     "discord.js": "^12.5.3"
   }
