@@ -38,17 +38,25 @@ client.login('');
 
 ## How to play
 
-For this example, the command prefix is `!` but feel free to use the one you use with your bot. You can also personalise the command name but I advice you to use the name `horsengel-roulette` with `hr` as an alias. If you don't use aliasses, the second one is prefered.
+For this example, the command prefix is `!` but feel free to use the one you use with your bot. You can also personalise the command name but I advice you to use the name `horsengel-roulette` with `hr` as an alias. If you don't use aliasses, the second one is preferred.
 
-- To start a game: `!hr <User>`
+- To start a duel: `!hr <User>`
 - To accept a duel: `!yes`
 - To shoot : `!pan`
 
-If there is no answer 30 seconds the start of a game, it is cancelled. After the same amount of time, if a player does not shoot, he loses the game but he isn't kicked.
+If there is no answer before 30 seconds after the start command, the duel is cancelled. After the same amount of time, if a player does not shoot, he loses the game but he isn not kicked.
 
 ## Translation
 
 For the moment, the only language avaible is English but a more personalised text will soon be released in English and in French. After that, you are free to participate to a translation in any other language as long as it follows the original text.
+
+## Thanks
+
+Thanks to:
+
+- [Horsengel](https://twitter.com/horsengel) for the inspiration and the kicks he received during the trials;
+- @Lioness100 for making this package compatible with TypeScript projects.
+
 
 ## Licenses
 
