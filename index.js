@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed, Permissions, Collection } = require('discord.js');
 
 // Bioman is the name of the bot which originally directly included the Horsengel roulette. It means "the bot that implements this module".
 class HorsengelRoulette {
@@ -61,7 +61,7 @@ class HorsengelRoulette {
 	async start() {
 		// Stops the game if both players are the same member
 		if (this.players[1].id === this.players[0].id) {
-			if (this.players[0].id === this.guild.ownerID) {
+			if (this.players[0].id === this.guild.ownerId) {
 				return this.channel.send('I can\'t suggest you to kick yourself. I would feel remorse after.');
 			} else {
 				return this.channel.send('It would be easier to kick yourself. Or would you need some help?');
@@ -70,7 +70,7 @@ class HorsengelRoulette {
 
 		this.channel.send(`${this.players[1]}, you have been challenged by ${this.players[0]} to a *Horsengel roulette* duel. Your answer must start by ${this.prefix}yes to accept it. (You have 30 seconds.)`);
 
-		let answer = true;
+		let answerYes = true;
 
 		// A bot is provoked
 		if (this.players[1].user.bot) {
@@ -80,7 +80,7 @@ class HorsengelRoulette {
 				// Bot refuses to play
 				const mood = Math.floor(Math.random() * 10);
 				if (mood === 5) {
-					if (this.players[0].user.id === this.guild.ownerID) {
+					if (this.players[0].user.id === this.guild.ownerId) {
 						return this.channel.send('I don\'t want to play to a Horsengel roulette. I\'m sorry.');
 					} else {
 						const description = 'don\'t bother me with a Horsengel roulette';
@@ -95,19 +95,14 @@ class HorsengelRoulette {
 			}
 		// A member is provoked
 		} else {
-			answer = await this.channel.awaitMessages((msg) => {
-				if (msg.author.id === this.players[1].id && msg.content === `${this.prefix}yes`) {
-					return true;
-				}
-				return false;
-			}, {max: 1, time: this.maxTimePlayerAnswer, errors: ['time']})
-			.catch(() => {
-				return false;
-			});
+			const filterYes = msg => msg.author.id === this.players[1].id && msg.content === `${this.prefix}yes`;
+			answerYes = await this.channel.awaitMessages({ filter: filterYes, max: 1, time: this.maxTimePlayerAnswer, errors: ['time'] })
+				.then(() => { return true; })
+				.catch(() => { return false; });
 		}
 
 		// The provoked member refuses to play
-		if (!answer) {
+		if (!answerYes) {
 			return this.channel.send(`${this.players[1]} preferred to run away.`);
 		}
 
@@ -116,48 +111,42 @@ class HorsengelRoulette {
 
 	async game() {
 		let player = this.players[0];
+		let answerPan = true;
 
 		for (let chamber = 0; chamber < this.revolver.length; chamber++) {
 			// Waiting for the answer
 			this.channel.send(`${player}, it's your turn to shoot. You should use the command ${this.prefix}pan to shoot. (You have 30 seconds.)`);
-
-			let answer = true;
 			// Game against the bot
 			if (player.id === this.bot.id) {
 				await this.sleep();
 				this.channel.send(`${this.prefix}pan`);
 			// Game against a member
 			} else {
-				answer = await this.channel.awaitMessages((msg) => {
-					if (msg.author.id === player.id && msg.content === `${this.prefix}pan`) {
-							return true;
-						}
-						return false;
-					}, {max: 1, time: this.maxTimePlayerAnswer, errors: ['time']})
-				.catch(() => {
-					return false;
-				});
+				const filterPan = msg => msg.author.id === player.id && msg.content === `${this.prefix}pan`;
+				answerPan = await this.channel.awaitMessages({ filter: filterPan, max: 1, time: this.maxTimePlayerAnswer, errors: ['time'] })
+					.then(() => { return true; })
+					.catch(() => { return false; });
 			}
 
 			// Game abandoned by a player
-			if (!answer) {
+			if (!answerPan) {
 				return this.channel.send(`${player} preferred to run away.`);
 			}
 
 			// No bullet
 			if (this.revolver[chamber] === 0) {
-				await this.channel.send({embed: this.embedRound(chamber, `${player} shot but he is still alive.`)});
+				await this.channel.send({ embeds: [this.embedRound(chamber, `${player} shot but he is still alive.`)] });
 			// Game over
 			} else {
 				// The loser is the guild owner
-				if (player.user.id === this.guild.ownerID) {
-					return this.channel.send({embed: this.embedRound(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)});
+				if (player.user.id === this.guild.ownerId) {
+					return this.channel.send({ embeds: [this.embedRound(chamber, `I don't have the right to kick ${player} but I can say that he lost.`, true)] });
 				// Loser is Bioman
 				} else if (player.user.id === this.bot.id) {
 					return this.channel.send('There must be a mistake…');
 				// The loser is a member
 				} else {
-					await this.channel.send({embed: this.embedRound(chamber, `${player} lost.`, true)});
+					await this.channel.send({ embeds: [this.embedRound(chamber, `${player} lost.`, true)] });
 					const description = 'lost the Horsengel roulette';
 					return this.kick(player, description);
 				}
@@ -173,10 +162,10 @@ class HorsengelRoulette {
 	}
 
 	async kick(player, description) {
-		if (this.bot.hasPermission('KICK_MEMBERS')) {
+		if (this.bot.permission.has(Permissions.FLAGS.KICK_MEMBERS)) {
 			await this.channel.send(`${this.prefix}kick ${player} ${description}`);
-			await this.channel.send({embed: this.embedKick(player.user, description)});
-			const invite = await this.channel.createInvite({maxAge: 0, maxUses: 1});
+			await this.channel.send({ embed: [this.embedKick(player.user, description)] });
+			const invite = await this.channel.createInvite({ maxAge: 0, maxUses: 1 });
 			await player.user.send(invite.url);
 			return player.kick(player, description);
 		}
@@ -214,28 +203,28 @@ class HorsengelRoulette {
 			}
 		}
 
-		return new Discord.MessageEmbed()
+		return new MessageEmbed()
 			.setTitle('Horsengel roulette')
 			.setColor('BLUE')
 			.setDescription(description)
 			//.setThumbnail()
-			.addField('Player 1', this.players[0], true)
-			.addField('Player 2', this.players[1], true)
+			.addField('Player 1', this.players[0].toString(), true)
+			.addField('Player 2', this.players[1].toString(), true)
 			.addField('\u200b', '​\u200b') // blank field
-			.addField('Round', round, true)
+			.addField('Round', round.toString(), true)
 			.addField('Revolver', this.revolverString, true)
 			.addField('\u200b', '​\u200b') // blank field
 	}
 
 	embedKick(kicked, reason) {
-		return new Discord.MessageEmbed()
+		return new MessageEmbed()
 			.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
 			.setColor('ORANGE')
 			//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')
 			.setThumbnail(kicked.displayAvatarURL)
 			.addField('Action', 'Kick', true)
 			.addField('Reason', reason, true)
-			.addField('Member', kicked, true)
+			.addField('Member', kicked.toString(), true)
 			.addField('Member ID', kicked.id, true);
 	}
 	
