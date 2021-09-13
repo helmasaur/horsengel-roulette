@@ -9,7 +9,7 @@ Russian roulette for the Discord.js library where the loser gets kicked. For the
 ## Requirements
 
 - If you are using discord.js version 12, make sure to use horsengel-roulette 1.1.0 ;
-- If you are using discord.js version 12, you can use the last version of horsengel-roulette (Node.js version 16.6.0 required).
+- If you are using discord.js version 13, you can use the last version of horsengel-roulette (Node.js version 16.6.0 required).
 
 ## Installation
 
