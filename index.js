@@ -1,17 +1,17 @@
-const { MessageEmbed, Permissions, Collection } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 // Bioman is the name of the bot which originally directly included the Horsengel roulette. It means "the bot that implements this module".
 class HorsengelRoulette {
-	constructor(msg, player1, player2, prefix, language) {
-		this.bot = msg.guild.me;
-		this.channel = msg.channel;
-		this.guild = msg.guild;
-		this.players = [player1, player2];
-		this.prefix = prefix;
-		this.revolver = [];
-		this.revolverString = '[o][o][o][o][o][o]';
-		this.maxTimePlayerAnswer = 30000;
-		this.timeBotAnswer = 1500;
+		constructor(msg, player1, player2, prefix, language) {
+			this.bot = msg.guild.members.me;
+			this.channel = msg.channel;
+			this.guild = msg.guild;
+			this.players = [player1, player2];
+			this.prefix = prefix;
+			this.revolver = [];
+			this.revolverString = '[o][o][o][o][o][o]';
+			this.maxTimePlayerAnswer = 30000;
+			this.timeBotAnswer = 1500;
 
 		// Language
 		const regex = new RegExp('^[a-z]{2}(-[A-Z]{2})?$');
@@ -122,7 +122,7 @@ class HorsengelRoulette {
 				this.channel.send(`${this.prefix}pan`);
 			// Game against a member
 			} else {
-				const filterPan = msg => msg.author.id === player.id && msg.content === `${this.prefix}pan`;
+				const filterPan = msg => msg.author.id === player.id && msg.content.startsWith(`${this.prefix}pan`);
 				answerPan = await this.channel.awaitMessages({ filter: filterPan, max: 1, time: this.maxTimePlayerAnswer, errors: ['time'] })
 					.then(() => { return true; })
 					.catch(() => { return false; });
@@ -164,7 +164,7 @@ class HorsengelRoulette {
 	async kick(player, description) {
 		if (this.bot.permission.has(Permissions.FLAGS.KICK_MEMBERS)) {
 			await this.channel.send(`${this.prefix}kick ${player} ${description}`);
-			await this.channel.send({ embed: [this.embedKick(player.user, description)] });
+			await this.channel.send({ embeds: [this.embedKick(player.user, description)] });
 			const invite = await this.channel.createInvite({ maxAge: 0, maxUses: 1 });
 			await player.user.send(invite.url);
 			return player.kick(player, description);
@@ -203,31 +203,35 @@ class HorsengelRoulette {
 			}
 		}
 
-		return new MessageEmbed()
+		return new EmbedBuilder()
 			.setTitle('Horsengel roulette')
 			.setColor('BLUE')
 			.setDescription(description)
 			//.setThumbnail()
-			.addField('Player 1', this.players[0].toString(), true)
-			.addField('Player 2', this.players[1].toString(), true)
-			.addField('\u200b', '​\u200b') // blank field
-			.addField('Round', round.toString(), true)
-			.addField('Revolver', this.revolverString, true)
-			.addField('\u200b', '​\u200b') // blank field
+			.addFields(
+				{ name: 'Player 1', value: this.players[0].toString(), inline: true },
+				{ name: 'Player 2', value: this.players[1].toString(), inline: true },
+				{ name: '\u200b', value: '​\u200b' }, // blank field
+				{ name: 'Round', value: round.toString(), inline: true },
+				{ name: 'Revolver', value: this.revolverString, inline: true },
+				{ name: '\u200b', value: '​\u200b' } // blank field
+			);
 	}
 
 	embedKick(kicked, reason) {
-		return new MessageEmbed()
+		return new EmbedBuilder()
 			.setAuthor(this.bot.user.tag, this.bot.user.displayAvatarURL)
 			.setColor('ORANGE')
 			//.setImage('https://img1.closermag.fr/var/closermag/storage/images/media/images-des-contenus/article/2016-08-04-corbier-l-ancien-complice-de-dorothee-je-deviens-ce-que-les-medias-ont-fait-de-moi-c-est-a-dire-rien/archive-corbier-1989/5405200-2-fre-FR/Archive-Corbier-1989_exact1024x768_l.jpg')
 			.setThumbnail(kicked.displayAvatarURL)
-			.addField('Action', 'Kick', true)
-			.addField('Reason', reason, true)
-			.addField('Member', kicked.toString(), true)
-			.addField('Member ID', kicked.id, true);
+			.addFields(
+				{ name: 'Action', value: 'Kick', inline: true },
+				{ name: 'Action', value: 'Kick', inline: true },
+				{ name: 'Reason', value: reason, inline: true },
+				{ name: 'Member', value: kicked.toString(), inline: true },
+				{ name: 'Member ID', value: kicked.id, inline: true }
+			);
 	}
-	
 }
 
 module.exports = HorsengelRoulette;

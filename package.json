@@ -26,10 +26,10 @@
   },
   "homepage": "https://github.com/helmasaur/horsengel-roulette#readme",
   "dependencies": {
-    "discord.js": "^13.1.0"
+    "discord.js": "^14.7.1"
   },
-  "engineStrict" : true,
+  "engineStrict": true,
   "engines": {
-    "node": ">= 16.6.0"
+    "node": ">= 16.9.0"
   }
 }
