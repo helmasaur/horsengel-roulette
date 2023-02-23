@@ -4,12 +4,16 @@
 
 # Horsengel roulette
 
-Russian roulette for the Discord.js library where the loser gets kicked. For the moment, it's only one versus one.
+Russian roulette for the Discord.js library where the loser gets kicked. For the moment, it's only one versus one. After getting kicked, an invitation link is sent to the loser.
+
+*Note: after getting kicked, the server joined date on a member's profile will be the date of the member rejoining the server.*
 
 ## Requirements
 
-- If you are using discord.js version 12, make sure to use horsengel-roulette 1.1.0 ;
-- If you are using discord.js version 12, you can use the last version of horsengel-roulette (Node.js version 16.6.0 required).
+- If you are using discord.js version 14, you can use the last version of horsengel-roulette (Node.js version 16.9.0 required).
+- If you are using the last version of discord.js version 13, the last version is not compatible. You can try using horsengel-roulette 1.1.0, but it has not been tested  yet ([I'm working on it](https://github.com/helmasaur/horsengel-roulette/issues/63)).
+
+The Horsengel roulette is compatible with TypeScript. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/issues/62).
 
 ## Installation
 
@@ -19,64 +23,87 @@ You have to add this module to your npm project folder.
 $ npm install horsengel-roulette
 ```
 
-If you are using a command framework such as [Commando.js](https://www.npmjs.com/package/discord.js-commando), you need to create two commands files called `yes.js` and `pan.js`. Those commands are used to play to the game and the command framework might return that those commands don't exist as it wouldn't find any file. If you have this issue, just create an empty class in the style of the command framework that you chose and it will work just fine.
+If you are using a framework, you might need to create two command files called `yes.js` and `pan.js`. Those commands are used during the game but the framework might return that those don't exist as it wouldn't find any corresponding file. If you have this issue, create a file using the structure of the framework that you chose and it will work just fine. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/issues/64).
 
 ## Example
 
-This is the most basic example of a working Horsengel roulette command on discord.js version 13. Its aim is to make it understandable. Don't forget to add the [intents](https://discordjs.guide/popular-topics/intents.html) listed in the example.
+This is the most basic example of a working Horsengel roulette command on discord.js v14. Its aim is to make it understandable. Don't forget to add the [gateway intents](https://discordjs.guide/popular-topics/intents.html) listed in the example.
 
 ```js
-const { Client, Intents } = require('discord.js');
-const HorsengelRoulette = require('..');
+const { Client, Events, GatewayIntentBits } = require('discord.js');
+const HorsengelRoulette = require('horsengel-roulette');
 
 const client = new Client({
 	intents: [
-		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MEMBERS,
-		Intents.FLAGS.GUILD_INVITES,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.DIRECT_MESSAGES],
-	allowedMentions: { parse: ['users', 'roles'], repliedUser: true }
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildInvites,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent
+	]
 });
 
-client.once('ready', () => {
-	console.log('Logged in');
-  });
+client.once(Events.ClientReady, c => {
+	console.log(`Ready! Logged in as ${c.user.tag}`);
+});
 
-client.on('messageCreate', async msg => {
-	if (msg.content.startsWith('?hr')) {
-		const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '?', 'fr');
+client.on(Events.MessageCreate, async msg => {
+	if (msg.content.startsWith('!hr')) {
+		const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'en');
 		hr.load(6, 1);
 		hr.start();
 	}
 });
 
-client.login('');
+client.login('your-bot-token');
 ```
+
+### The Horsengel roulette nstanciation
+
+```js
+const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'en');
+```
+
+- The first argument is the message starting the duel.
+- The second and third argument are respectively the player 1 (the one provoking the duel) and the player 2 (the one provoked).
+- The third argument is the prefix you want to use;
+- The last argument is to set the language of the game response (not used yet).
+
+### The loading of the revolver
+
+```js
+hr.load(6, 1);
+```
+
+- The first argument is the magazine size.
+- The second the number of bullets.
 
 ## How to play
 
 For this example, the command prefix is `!` but feel free to use the one you use with your bot. You can also personalise the command name but I advice you to use the name `horsengel-roulette` with `hr` as an alias. If you don't use aliasses, the second one is preferred.
 
-- To start a duel: `!hr <User>`
-- To accept a duel: `!yes`
-- To shoot : `!pan`
+Commands:
+- to start a duel: `!hr <GuildMember>`
+- to accept a duel: `!yes`
+- to shoot : `!pan`
 
-If there is no answer before 30 seconds after the start command, the duel is cancelled. After the same amount of time, if a player does not shoot, he loses the game but he isn not kicked.
+If there is no answer before 30 seconds after the start command, the duel is cancelled. After the same amount of time, if a player does not shoot, he loses the game but he isn't kicked.
 
 ## Translation
 
-For the moment, the only language avaible is English but a more personalised text will soon be released in English and in French. After that, you are free to participate to a translation in any other language as long as it follows the original text.
+For the moment, the only avaible language is English but a more personalised text will soon be released in English and in French. After that, you are free to participate to the translation in any other language as long as it follows the original text.
 
 ## Thanks
 
 Thanks to:
 
 - [Horsengel](https://twitter.com/horsengel) for the inspiration and the kicks he received during the trials;
-- @Lioness100 for making this package compatible with TypeScript projects.
+- [@Lioness100](https://github.com/Lioness100) for making this package compatible with TypeScript projects;
+- the [Programming Discussion](https://discord.com/invite/progdisc) Discord server.
 
 
 ## Licenses
 
-- Horsengel-roulette source code is published under [MIT License](https://github.com/Helmasaur/ac-keijiban/blob/master/LICENSE).
-- Discord.js source code is published under [Apache License 2.0](https://github.com/discordjs/discord.js/blob/master/LICENSE).
+- horsengel-roulette source code is published under [MIT License](https://github.com/Helmasaur/ac-keijiban/blob/master/LICENSE).
+- [discord.js](https://discord.js.org/) source code is published under [Apache License 2.0](https://github.com/discordjs/discord.js/blob/master/LICENSE).

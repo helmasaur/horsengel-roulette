@@ -19,9 +19,9 @@ client.once(Events.ClientReady, c => {
 client.on(Events.MessageCreate, async msg => {
 	if (msg.content.startsWith('!hr')) {
 		const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'fr');
-		hr.load(6, 1);
+		hr.load(6, 1); // magazine size and number of bullets
 		hr.start();
 	}
 });
 
-client.login('');
+client.login('your-bot-token');
