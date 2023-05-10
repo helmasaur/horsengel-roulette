@@ -10,8 +10,8 @@ Russian roulette for the Discord.js library where the loser gets kicked. For the
 
 ## Requirements
 
-- If you are using discord.js version 14, you can use the last version of horsengel-roulette (Node.js version 16.9.0 required).
-- If you are using the last version of discord.js version 13, the last version is not compatible. You can try using horsengel-roulette 1.1.0, but it has not been tested  yet ([I'm working on it](https://github.com/helmasaur/horsengel-roulette/issues/63)).
+- If you are using discord.js version 14, you can use the last version of horsengel-roulette (Node.js version 16.9.0 or newer required).
+- If you are using the last version of discord.js version 13, the last version is not compatible. You can try using horsengel-roulette 1.2.0, but it has not been tested  yet ([I'm working on it](https://github.com/helmasaur/horsengel-roulette/issues/63)).
 
 The Horsengel roulette is compatible with TypeScript. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/issues/62).
 
@@ -59,7 +59,7 @@ client.on(Events.MessageCreate, async msg => {
 client.login('your-bot-token');
 ```
 
-### The Horsengel roulette nstanciation
+### The Horsengel roulette instanciation
 
 ```js
 const hr = new HorsengelRoulette(msg, msg.member, msg.mentions.members.first(), '!', 'en');
