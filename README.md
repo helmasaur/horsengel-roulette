@@ -10,10 +10,12 @@ Russian roulette for the Discord.js library where the loser gets kicked. For the
 
 ## Requirements
 
-- If you are using discord.js version 14, you can use the last version of horsengel-roulette (Node.js version 16.9.0 or newer required).
-- If you are using the last version of discord.js version 13, the last version is not compatible. You can try using horsengel-roulette 1.2.0, but it has not been tested  yet ([I'm working on it](https://github.com/helmasaur/horsengel-roulette/issues/63)).
+The Horsengel roulette works both on version 13 and 14 of discord.js:
 
-The Horsengel roulette is compatible with TypeScript. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/issues/62).
+- **v14:** you can use the last version of horsengel-roulette (Node.js version 16.9.0 or newer required);
+- **v13:** use the version 1.2.0 of horsengel-roulette using this command to install it: `npm install horsengel-roulette@1.2.0` and [this example](https://github.com/helmasaur/horsengel-roulette/tree/release/1.2.0#example) to make it work. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/discussions/69).
+
+The Horsengel roulette is compatible with TypeScript. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/discussions/70).
 
 ## Installation
 
@@ -23,7 +25,7 @@ You have to add this module to your npm project folder.
 $ npm install horsengel-roulette
 ```
 
-If you are using a framework, you might need to create two command files called `yes.js` and `pan.js`. Those commands are used during the game but the framework might return that those don't exist as it wouldn't find any corresponding file. If you have this issue, create a file using the structure of the framework that you chose and it will work just fine. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/issues/64).
+If you are using a framework, you might need to create two command files called `yes.js` and `pan.js`. Those commands are used during the game but the framework might return that those don't exist as it wouldn't find any corresponding file. If you have this issue, create a file using the structure of the framework that you chose and it will work just fine. If you have an issue, you can [leave a comment here](https://github.com/helmasaur/horsengel-roulette/discussions/71).
 
 ## Example
 
